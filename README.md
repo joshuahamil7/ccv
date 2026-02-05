@@ -17,29 +17,28 @@ CCV (CSV/Excel/Data Utility) is a powerful command-line tool for data manipulati
 
 ## Examples
 
-# View a CSV file
+### View a CSV file
 ccv data.csv
 
-# Show statistics
+### Show statistics
 ccv --stats sales.xlsx
 
-# Filter and export
+### Filter and export
 ccv --filter "amount > 100" --select "date,product" data.csv --output filtered.csv
 
-# SQL query
+### SQL query
 ccv --query "SELECT * FROM $1 WHERE category = 'Electronics'" products.csv
 
 ## Excel
 
-# Read specific Excel range
+### Read specific Excel range
 ccv --sheet "Q1" --range "A2:G100" financials.xlsx --output q1_data.csv
 
-# Append to existing Excel
+### Append to existing Excel
 ccv --append report.xlsx --sheet "Data" new_data.csv
 
-# Write to specific location
+### Write to specific location
 ccv --write template.xlsx --range "B10" --sheet "Results" processed.csv
-
 
 ## Requirements
 
