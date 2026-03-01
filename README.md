@@ -1,64 +1,55 @@
 # ccv
-CCV is a console utility, a Swiss Army knife for tabular data manipulation, supporting CSV, XLSX, JSON, Parquet, and TSV formats. It uses DuckDB as a backend for high-performance SQL operations on files.
 
-# CCV - Command-line Data Swiss Army Knife v3.0.0
+CCV is a simple but powerful tool that helps you work with financial data files—like CSV exports from QuickBooks, Excel spreadsheets, or bank statements—right from your computer’s command line. No need to open a heavy spreadsheet program; you can quickly see, filter, clean, and combine your data with just a few words.
 
-CCV (CSV/Excel/Data Utility) is a powerful command-line tool for data manipulation, analysis, and transformation. Version 3.0.0 introduces an interactive Ruby DSL console and enhanced transformation capabilities.
+What Can You Do With CCV?
 
-## Features
+· Look inside any data file instantly, even if it’s too big for Excel.
+  ```
+  ccv sales_2025.csv
+  ```
+· Find and save only the rows you need – for example, show all transactions over $1,000.
+  ```
+  ccv --filter "amount > 1000" transactions.csv --output big_payments.csv
+  ```
+· Run simple calculations – total sales per customer, average invoice amount, etc. – using plain English-like SQL.
+  ```
+  ccv --query "SELECT customer, SUM(amount) FROM $1 GROUP BY customer" sales.csv --output totals.csv
+  ```
+· Clean messy data – remove duplicate entries, fill in missing cells, or drop empty rows in one step.
+  ```
+  ccv --dedup --fill-missing 0 transactions.csv --output clean_transactions.csv
+  ```
+· Work with Excel files like a pro – read a specific range from a sheet, append new data to an existing workbook, or write results to a particular cell.
+  ```
+  ccv --sheet "Q1" --range "A2:G100" financials.xlsx --output q1_data.csv
+  ccv --append report.xlsx --sheet "Data" new_data.csv
+  ccv --write template.xlsx --range "B10" --sheet "Results" processed.csv
+  ```
+· Handle many file types – CSV, Excel (XLSX/XLS), JSON, Parquet, and TSV – all in one place.
 
-- **Multi-format support**: CSV, Excel (XLSX/XLS), JSON
-- **Interactive console**: Ruby DSL for exploratory data analysis
-- **SQL-powered queries**: Use DuckDB's full SQL capabilities
-- **Data cleaning**: Drop nulls, fill values, remove duplicates
-- **Excel operations**: Read/write specific ranges, sheets
-- **Data transformation**: Filter, sort, group, aggregate, pivot
-- **Chainable interface**: Build complex pipelines easily
+Why Bookkeepers & Accountants Love It
 
-## Examples
+· Speed: Processes millions of rows in seconds, thanks to the high-performance DuckDB engine underneath.
+· Automation: You can write simple scripts to repeat monthly tasks, like preparing client reports or reconciling bank feeds.
+· No more “file too large” errors – CCV handles files of any size without crashing.
+· Interactive mode lets you explore data step by step, testing filters and calculations before saving.
 
-### View a CSV file
-ccv data.csv
+Quick Start
 
-### Show statistics
-ccv --stats sales.xlsx
+1. Install (requires Ruby 2.7+):
+   ```
+   git clone https://github.com/joshuahamil7/ccv.git
+   cd ccv
+   sudo ./install.sh
+   ```
+2. Try it – view your first file:
+   ```
+   ccv expenses.xlsx
+   ```
+3. Get help anytime:
+   ```
+   ccv --help
+   ```
 
-### Filter and export
-ccv --filter "amount > 100" --select "date,product" data.csv --output filtered.csv
-
-### SQL query
-ccv --query "SELECT * FROM $1 WHERE category = 'Electronics'" products.csv
-
-## Excel
-
-### Read specific Excel range
-ccv --sheet "Q1" --range "A2:G100" financials.xlsx --output q1_data.csv
-
-### Append to existing Excel
-ccv --append report.xlsx --sheet "Data" new_data.csv
-
-### Write to specific location
-ccv --write template.xlsx --range "B10" --sheet "Results" processed.csv
-
-## Requirements
-
-Ruby 2.7 or higher
-DuckDB gem (gem install duckdb)
-Optional: rubyXL gem for Excel support (gem install rubyXL)
-
-## Quick Start
-
-### Installation
-
-```bash
-# Clone repository
-git clone https://github.com/joshuahamil7/ccv.git
-cd ccv
-
-# Install as system utility
-chmod +x install.sh
-sudo ./install.sh
-
-# Or use directly
-chmod +x ccv.rb
-./ccv.rb --help
+CCV is free, open‑source, and built to make your daily data work easier. Give it a try!
