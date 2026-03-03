@@ -2,6 +2,22 @@
 
 CCV is a simple but powerful tool that helps you work with financial data files—like CSV exports from QuickBooks, Excel spreadsheets, or bank statements—right from your computer's command line. No need to open a heavy spreadsheet program. You can quickly see, filter, clean, and combine your data with just a few words.
 
+<details>
+<summary><strong>📋 Contents</strong> (click to expand)</summary>
+
+- [Quick Start](#quick-start)
+- [What Can You Do?](#what-can-you-do-with-ccv)
+- [Why Bookkeepers & Accountants Love It](#why-bookkeepers--accountants-love-it)
+- [Installation](#installation)
+- [Usage Examples](#usage-examples)
+- [Column References Made Simple](#column-references-made-simple)
+- [Command Reference](#command-reference)
+- [Real-World Workflows](#real-world-workflows)
+- [Tips & Troubleshooting](#tips--troubleshooting)
+- [Get Help](#get-help)
+- [License](#license)
+- [Contributing](#contributing)
+</details>
 ---
 
 Quick Start
