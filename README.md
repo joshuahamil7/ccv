@@ -1,6 +1,6 @@
 # ccv
 
-CCV is a simple but powerful tool for console that helps you work with financial data files—like CSV exports from QuickBooks, Excel spreadsheets, or bank statements—right from your computer's command line. No need to open a heavy spreadsheet program; you can quickly see, filter, clean, and combine your data with just a few words.
+CCV is a simple but powerful tool that helps you work with financial data files—like CSV exports from QuickBooks, Excel spreadsheets, or bank statements—right from your computer's command line. No need to open a heavy spreadsheet program. You can quickly see, filter, clean, and combine your data with just a few words.
 
 ---
 
@@ -108,11 +108,11 @@ ccv data.csv to output.jsonl
 
 Why Bookkeepers & Accountants Love It
 
-· Speed: Processes millions of rows in seconds using the high-performance DuckDB engine underneath.
-· Automation: Write simple scripts to repeat monthly tasks like preparing client reports or reconciling bank feeds.
+· Speed – Processes millions of rows in seconds using the high-performance DuckDB engine underneath.
+· Automation – Write simple scripts to repeat monthly tasks like preparing client reports or reconciling bank feeds.
 · No more "file too large" errors – CCV handles files of any size with streaming, no crashing.
-· Interactive exploration: Test filters and calculations step by step before saving results.
-· In-place Excel updates: Modify existing workbooks without rebuilding them from scratch.
+· Interactive exploration – Test filters and calculations step by step before saving results.
+· In-place Excel updates – Modify existing workbooks without rebuilding them from scratch.
 
 ---
 
@@ -232,28 +232,28 @@ Command Reference
 
 Input Options
 
-· from <file> - Input file (or use as first argument)
-· sheet <name> - Excel sheet name
-· range <A1:B10> - Excel cell range
-· record_path <xpath> - XML record path
-· --no-headers - Treat first row as data, not headers
+· from <file> – Input file (or use as first argument)
+· sheet <name> – Excel sheet name
+· range <A1:B10> – Excel cell range
+· record_path <xpath> – XML record path
+· --no-headers – Treat first row as data, not headers
 
 Output Options
 
-· to <file> - Output file (default: stdout)
-· sheet <name> - Output Excel sheet name
-· start <A1> - Starting cell for Excel output
-· mode [append|overwrite] - Excel write mode (default: append)
+· to <file> – Output file (default: stdout)
+· sheet <name> – Output Excel sheet name
+· start <A1> – Starting cell for Excel output
+· mode [append|overwrite] – Excel write mode (default: append)
 
 Transformations
 
-· select <columns> - Keep only specified columns
-· filter <condition> - Keep rows matching condition
-· dedup - Remove duplicate rows
-· fill-missing <value> - Replace empty cells with value
-· drop-empty - Remove rows that are completely empty
-· limit <n> - Show only first n rows
-· -q, --query <sql> - Run SQL query
+· select <columns> – Keep only specified columns
+· filter <condition> – Keep rows matching condition
+· dedup – Remove duplicate rows
+· fill-missing <value> – Replace empty cells with value
+· drop-empty – Remove rows that are completely empty
+· limit <n> – Show only first n rows
+· -q, --query <sql> – Run SQL query
 
 ---
 
@@ -306,15 +306,20 @@ ccv --query "SELECT * FROM 'jan.csv' UNION ALL SELECT * FROM 'feb.csv'" > q1.csv
 
 Tips & Troubleshooting
 
-File too large? CCV streams data—it never loads everything into memory. Files with millions of rows work fine.
+File too large?
+CCV streams data—it never loads everything into memory. Files with millions of rows work fine.
 
-Encoding issues? Files are assumed UTF-8. For Excel files with odd characters, try saving as CSV first.
+Encoding issues?
+Files are assumed UTF-8. For Excel files with odd characters, try saving as CSV first.
 
-Need headers? CCV preserves headers by default. Use --no-headers if your file lacks them.
+Need headers?
+CCV preserves headers by default. Use --no-headers if your file lacks them.
 
-Column names with spaces? Use backticks: filter "`Transaction Amount` > 1000"
+Column names with spaces?
+Use backticks: filter "`Transaction Amount` > 1000"
 
-Performance tip: For repeated queries on the same file, CCV caches the data in-memory after first read.
+Performance tip:
+For repeated queries on the same file, CCV caches the data in-memory after first read.
 
 ---
 
