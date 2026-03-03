@@ -1,0 +1,264 @@
+CCV(1) - General Commands Manual
+
+NAME
+
+ccv - CSV/Excel/XML converter and processor for tabular data
+
+SYNOPSIS
+
+ccv [input] [operations] [output] [options]
+
+ccv from file [sheet name] [range A1:B10] [record_path xpath] [operations] [to file [sheet name] [start A1] [mode append|overwrite]]
+
+ccv -q|--query sql file...
+
+DESCRIPTION
+
+ccv is a command-line tool for working with financial data files—CSV exports from QuickBooks, Excel spreadsheets, bank statements, and XML reports. It streams data directly from the command line without loading entire files into memory, handling millions of rows instantly.
+
+Column references work three ways interchangeably:
+
+· Original column names: filter "Amount > 1000"
+· Column letters: filter "B > 1000" (A=1st column, B=2nd, etc.)
+· Column indices: filter "column1 > 1000" (0-based)
+
+OPTIONS
+
+Input Options
+
+from file
+: Input file path. Use - for stdin. Can also be first argument.
+
+sheet name
+: Excel sheet name to read.
+
+range A1:B10
+: Excel cell range to read.
+
+record_path xpath
+: XML record path (e.g., //transaction).
+
+--no-headers
+: Treat first row as data, not headers.
+
+Output Options
+
+to file
+: Output file path. Use - for stdout (default).
+
+sheet name
+: Output Excel sheet name.
+
+start A1
+: Starting cell for Excel output.
+
+mode append|overwrite
+: Excel write mode (default: append).
+
+Transformations
+
+select column1 column2 ...
+: Keep only specified columns.
+
+filter|where condition
+: Keep rows matching condition.
+
+limit n
+: Show only first n rows.
+
+-q|--query sql
+: Run SQL query on data.
+
+--debug
+: Show debug information.
+
+EXAMPLES
+
+Basic Operations
+
+Look at a file:
+
+```bash
+$ ccv bank_statement.csv | head -5
+```
+
+Filter transactions:
+
+```bash
+$ ccv transactions.csv filter "amount > 5000" > large_payments.csv
+$ ccv transactions.csv filter "B > 1000"          # by column letter
+$ ccv transactions.csv filter "column1 > 1000"    # by column index
+```
+
+Select specific columns:
+
+```bash
+$ ccv sales.csv select Customer Amount Date > summary.csv
+$ ccv sales.csv select column0 column2 column4
+```
+
+Limit output:
+
+```bash
+$ ccv large_file.csv limit 100 > sample.csv
+```
+
+Chain operations:
+
+```bash
+$ ccv sales.csv filter "amount > 1000" select Customer Amount Date limit 50
+```
+
+Excel Operations
+
+Read specific sheet:
+
+```bash
+$ ccv report.xlsx sheet "Annual Summary"
+```
+
+Read cell range:
+
+```bash
+$ ccv report.xlsx range "B2:F100"
+```
+
+Write to Excel:
+
+```bash
+$ ccv data.csv to output.xlsx
+$ ccv results.csv to template.xlsx sheet "Output" start C5
+$ ccv new_data.csv to existing.xlsx sheet "Transactions" mode append
+```
+
+SQL Queries
+
+Aggregations:
+
+```bash
+$ ccv --query "SELECT SUM(amount) FROM data" sales.csv
+$ ccv --query "SELECT customer, COUNT(*), SUM(amount) FROM data GROUP BY customer" sales.csv
+```
+
+Subqueries:
+
+```bash
+$ ccv --query "SELECT * FROM data WHERE amount > (SELECT AVG(amount) FROM data)" sales.csv
+```
+
+Date filtering:
+
+```bash
+$ ccv --query "SELECT * FROM data WHERE date BETWEEN '2025-01-01' AND '2025-03-31'" q1.csv
+```
+
+Combine multiple files:
+
+```bash
+$ ccv --query "SELECT * FROM 'jan.csv' UNION ALL SELECT * FROM 'feb.csv'" > q1.csv
+```
+
+XML Processing
+
+Parse XML bank statements:
+
+```bash
+$ ccv bank_export.xml record_path "//record" > data.csv
+$ ccv complex.xml record_path "//root/items/item" > items.csv
+```
+
+Format Conversion
+
+Convert between formats:
+
+```bash
+$ ccv data.xlsx > data.csv
+$ ccv data.csv to output.xlsx
+$ ccv data.csv to output.jsonl
+```
+
+Pipeline Operations
+
+Read from stdin:
+
+```bash
+$ cat data.csv | ccv filter "column2 != ''" > cleaned.csv
+```
+
+Count rows:
+
+```bash
+$ ccv transactions.csv | wc -l
+```
+
+Real-World Workflows
+
+Monthly bank reconciliation:
+
+```bash
+$ ccv bank_statement.xlsx sheet "March" range "A5:F200" > march_raw.csv
+$ ccv march_raw.csv filter "abs(amount) > 10000" > large_transactions.csv
+$ ccv --query "
+  SELECT b.date, b.description, b.amount, q.invoice 
+  FROM 'bank.csv' b 
+  LEFT JOIN 'quickbooks.csv' q ON b.amount = q.amount 
+  WHERE q.invoice IS NULL
+" > unmatched.csv
+```
+
+Client report generation:
+
+```bash
+$ ccv all_clients.xlsx sheet "Data" filter "client_id == 'ACME123'" > acme_raw.csv
+$ ccv acme_raw.csv --query "SELECT date, SUM(amount) as daily_total FROM data GROUP BY date" > acme_daily.csv
+$ ccv acme_daily.csv to acme_report.xlsx sheet "Daily Totals" start B5
+```
+
+Batch processing:
+
+```bash
+$ for file in *.csv; do
+    ccv "$file" filter "amount > 0" > "positive_$file"
+  done
+```
+
+COLUMN REFERENCES
+
+Any of these work interchangeably:
+
+Reference Example Meaning
+Original name filter "Amount > 1000" Column named "Amount"
+Column letter filter "B > 1000" Second column (A=1, B=2, ...)
+Column index filter "column1 > 1000" Second column (0-based)
+
+NOTES
+
+· Files with spaces in names: Use quotes: "My File.csv"
+· Column names with spaces: Use backticks: filter "`Transaction Amount` > 1000"
+· Large files: CCV streams data—never loads everything into memory
+· Performance: Repeated queries on same file are cached
+· Encoding: Files assumed UTF-8
+
+EXIT STATUS
+
+0 on success, 1 on failure.
+
+ENVIRONMENT
+
+No environment variables used.
+
+FILES
+
+Input files can be CSV, Excel (.xlsx), XML, JSON, Parquet, or TSV.
+
+BUGS
+
+Report issues at https://github.com/joshuahamil7/ccv
+
+AUTHOR
+
+JH joshuahamil7@runbox.com
+
+SEE ALSO
+
+csvkit(1), xsv(1), duckdb(1)
