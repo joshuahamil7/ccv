@@ -22,7 +22,7 @@ What Can You Do With CCV?
   ```
 · Work with Excel files like a pro – read a specific range from a sheet, append new data to an existing workbook, or write results to a particular cell.
   ```
-  ccv --sheet "Q1" --range "A2:G100" financials.xlsx --output q1_data.csv
+  ccv sheet "Q1" --range "A2:G100" financials.xlsx --output q1_data.csv
   ccv --append report.xlsx --sheet "Data" new_data.csv
   ccv --write template.xlsx --range "B10" --sheet "Results" processed.csv
   ```
@@ -35,19 +35,51 @@ Why Bookkeepers & Accountants Love It
 · No more “file too large” errors – CCV handles files of any size without crashing.
 · Interactive mode lets you explore data step by step, testing filters and calculations before saving.
 
-Quick Start
 
-1. Install (requires Ruby 2.7+):
+Install (requires Ruby 2.7+):
    ```
    git clone https://github.com/joshuahamil7/ccv.git
    cd ccv
    sudo ./install.sh
    ```
-2. Try it – view your first file:
-   ```
-   ccv expenses.xlsx
-   ```
-3. Get help anytime:
+
+Quick Start
+
+1. Look at a file — see what you're working with
+
+```bash
+ccv bank_statement.csv | head -5
+```
+
+2. Find specific transactions — filter by amount, date, or description
+
+```bash
+ccv transactions.csv filter "amount > 5000" > large_payments.csv
+```
+
+3. Pull data from Excel — grab a specific sheet or range
+
+```bash
+ccv client_report.xlsx sheet "March" range "A10:F50" > march_data.csv
+```
+
+4. Run a quick total — sum it up in seconds
+
+```bash
+ccv --query "SELECT SUM(amount) FROM data" sales.csv
+```
+
+5. Save results back to Excel — update existing files without rebuilding them
+
+```bash
+ccv processed.csv to template.xlsx sheet "Results" start B2
+```
+
+That's it. You're up and running in under a minute.
+
+---
+
+Get help anytime:
    ```
    ccv --help
    ```
